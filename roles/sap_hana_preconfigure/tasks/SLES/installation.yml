@@ -1,13 +1,18 @@
 ---
-
 #- name: Enable Debugging
 #  debug:
 #    verbosity: "{{ debuglevel }}"
 #
-- name: list of required SAP Notes
-  ansible.builtin.debug:
-    var: __sap_hana_preconfigure_sapnotes | difference([''])
+- name: Ensure saphana pattern is installed
+  ansible.builtin.zypper:
+    type: pattern
+    name: sap-hana
+    state: present
+    force: yes
 
-- name: include configuration actions for required sapnotes
-  ansible.builtin.include_tasks: "tasks/sapnote/{{ item }}/installation.yml"
-  with_items: "{{ __sap_hana_preconfigure_sapnotes | difference(['']) }}"
+- name: Ensure saptune is installed
+  ansible.builtin.zypper:
+    type: package
+    name: "saptune={{ sap_hana_preconfigure_saptune_version }}"
+    state: present
+    force: yes

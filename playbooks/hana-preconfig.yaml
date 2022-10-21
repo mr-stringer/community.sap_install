@@ -1,0 +1,15 @@
+---
+- hosts: hana
+  remote_user: sstringer
+  become: true
+  become_user: root
+  pre_tasks:
+  vars:
+          sap_hana_preconfigure_fail_if_reboot_required: no
+          sap_hana_preconfigure_update: yes
+
+  tasks:
+    
+  - name: Run role
+    ansible.builtin.include_role:
+      name: ../roles/sap_hana_preconfigure
