@@ -9,9 +9,7 @@
     name: "{{ service }}"
     state: stopped
     enabled: no
-  loop:
-    - sapconf
-    - tuned
+  loop: "{{ sap_hana_preconfigure_saptune_conflicting_services }}"
   loop_control:
     loop_var: service
 
@@ -23,7 +21,7 @@
 
 - name: Ensure saptune_check executes correctly
   ansible.builtin.command: saptune_check
-  changed_when: no    
+  changed_when: no
 
 - name: Discover active solution
   ansible.builtin.command: saptune solution enabled
@@ -32,8 +30,8 @@
 
 - name: Set fact for active solution
   ansible.builtin.set_fact:
-    solution_configured: "{{ (__sap_hana_preconfigure_register_saptune_status.stdout | regex_search('(\\S+)', '\\1' ))[0] | default('NONE') }}" # Capture the first block on none whitespace
-    
+    solution_configured: "{{ (__sap_hana_preconfigure_register_saptune_status.stdout | regex_search('(\\S+)', '\\1'))[0] | default('NONE') }}" # Capture the first block on none whitespace
+
 - name: Show configured solution
   ansible.builtin.debug:
     var: solution_configured

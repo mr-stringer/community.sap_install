@@ -138,7 +138,7 @@ sap_hana_preconfigure_run_grub2_mkconfig: "{{ __sap_hana_preconfigure_run_grub2_
 ## The following variables control aspects of saptune and are only relevant for SLES for SAP Application 
 
 # Version of saptune to install this will replace the current installed version if present, downgrading if necessary
-sap_hana_preconfigure_saptune_version: 3.0.1
+sap_hana_preconfigure_saptune_version: 3.0.2
 
 # The saptune solution to apply.  For HANA, the only appropriate options are:
 # * HANA
@@ -149,5 +149,9 @@ sap_hana_preconfigure_saptune_version: 3.0.1
 sap_hana_preconfigure_saptune_solution: HANA
 
 # When running on Azure, TCP timestamps, reuse and recycle should be disabled
-# set to yes when running on Azure  
-sap_hana_preconfigure_saptune_azure: no
+# set to yes when running on Azure
+sap_hana_preconfigure_saptune_azure: false
+
+sap_hana_preconfigure_saptune_conflicting_services:
+  - sapconf
+  - tuned
