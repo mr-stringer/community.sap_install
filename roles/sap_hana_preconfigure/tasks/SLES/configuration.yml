@@ -30,11 +30,11 @@
 
 - name: Set fact for active solution
   ansible.builtin.set_fact:
-    solution_configured: "{{ (__sap_hana_preconfigure_register_saptune_status.stdout | regex_search('(\\S+)', '\\1'))[0] | default('NONE') }}" # Capture the first block on none whitespace
+    __sap_hana_preconfigure_solution_configured: "{{ (__sap_hana_preconfigure_register_saptune_status.stdout | regex_search('(\\S+)', '\\1'))[0] | default('NONE') }}" # Capture the first block on none whitespace
 
 - name: Show configured solution
   ansible.builtin.debug:
-    var: solution_configured
+    var: __sap_hana_preconfigure_solution_configured
 
 # If this is a cluster node on Azure, we need to override to disable tcp timestamps, reuse and recycle.
 # This can be done by copying the sapnote file 2382421 from /usr/share/saptune/notes to /etc/saptune/override
@@ -64,9 +64,9 @@
   failed_when: no # We expect this to fail if it has not previously been applied
 
 - name: Ensure no solution is currently applied
-  ansible.builtin.command: "saptune solution revert {{ solution_configured }}"
+  ansible.builtin.command: "saptune solution revert {{ __sap_hana_preconfigure_solution_configured }}"
   when: 
-    - solution_configured != 'NONE'
+    - __sap_hana_preconfigure_solution_configured != 'NONE'
     - __sap_hana_preconfigure_register_saptune_verify.rc != 0
 
 - name: Ensure saptune solution is applied
